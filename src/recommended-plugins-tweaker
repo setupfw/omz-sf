@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 [ -x "$(command -v systemctl)" ] && echo systemd >>$2
 

@@ -1,26 +1,32 @@
 if [ -z "$INSTPKG" ]; then
-    if [ -x "$(command -v pacman)" ]; then
-        INSTPKG='pacman -S --noconfirm '
-    elif [ -x "$(command -v dpkg)" ]; then
-        INSTPKG='apt-get install -y '
-    elif [ -x "$(command -v dnf)" ]; then
-        INSTPKG='dnf install -y '
-    elif [[ -x "$(command -v pkcon)" && -d /run/systemd/system ]]; then
-        INSTPKG='pkcon install -y '
-    fi
-    if [[ "$INSTPKG" != pkcon* ]] && [ $(id -u) != 0 ] && [ -x "$(command -v sudo)" ]; then
-        INSTPKG="sudo $INSTPKG"
-    fi
+   if [ -x "$(command -v pacman)" ]; then
+      INSTPKG='pacman -S --noconfirm'
+   elif [ -x "$(command -v dpkg)" ]; then
+      INSTPKG='apt-get install -y'
+   elif [ -x "$(command -v dnf)" ]; then
+      INSTPKG='dnf install -y'
+   elif [ -x "$(command -v apk)" ]; then
+      INSTPKG='apk add'
+   elif [ -x "$(command -v pkcon)" ] && [ -d /run/systemd/system ]; then
+      INSTPKG='pkcon install -y'
+   fi
+   case $INSTPKG in pkcon*) ;; *)
+      if [ $(id -u) != 0 ] && [ -x "$(command -v sudo)" ]; then
+         INSTPKG="sudo $INSTPKG"
+      fi
+      ;;
+   esac
 fi
 
-if [ -v INSTPKG ]; then
-    echo "INFO: package installer = $INSTPKG"
+if [ -n "$INSTPKG" ]; then
+   echo "INFO: package installer = $INSTPKG"
 else
-    echo
-    echo "What's your package manager? such as:"
-    echo '- `sudo pacman -S --noconfirm `'
-    echo '- `sudo apt-get install -y `'
-    echo '- `sudo dnf install -y `'
-    echo '- ...'
-    read -p 'Input the command: ' INSTPKG
+   echo
+   echo "What's your package manager? such as:"
+   echo '- `sudo pacman -S --noconfirm`'
+   echo '- `sudo apt-get install -y`'
+   echo '- `sudo dnf install -y`'
+   echo '- `sudo apk add`'
+   echo '- ...'
+   read -p 'Input the command:' INSTPKG
 fi

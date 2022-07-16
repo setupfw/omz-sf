@@ -1,21 +1,23 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 cd $(dirname $0)
 
 # Constants
-ZSH="${ZSH:-$HOME/.oh-my-zsh}"
+ZSH=${ZSH:-$HOME/.oh-my-zsh}
 ZSH_CUSTOM="$ZSH/custom"
-ZSH_PLUGLOADER=${ZSH_PLUGLOAD:-$HOME/.zshrc.plugloader.zsh}
-ZSH_PLUGLOADER_LIST=${ZSH_PLUGLOADER_LIST:-$HOME/.zshrc.plugloader-list.txt}
+ZSH_PLUGLOADER=${ZSH_PLUGLOADER:-$HOME/.zshrc.plug.loader}
+ZSH_PLUGLOADER_LIST=${ZSH_PLUGLOADER_LIST:-$HOME/.zshrc.plug.list}
 
 source lib/prompt-options
 source lib/find-pkgmgr
 
-[ ! -x "$(command -v zsh)" ] && $INSTPKG zsh
-[ ! -x "$(command -v git)" ] && $INSTPKG git
+if [ ! -x "$(command -v zsh)" ]; then $INSTPKG zsh; fi
+if [ ! -x "$(command -v git)" ]; then $INSTPKG git; fi
 
 if [ ! -d "$ZSH" ]; then
-   [ ! -x "$(command -v curl)" ] && [ ! -x "$(command -v wget)" ] && $INSTPKG wget
+   if [ ! -x "$(command -v curl)" ] && [ ! -x "$(command -v wget)" ]; then
+      $INSTPKG wget
+   fi
 
    INSTALLER_URL=${INSTALLER_URL:-https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh}
    SCRIPT_CODE="$([ -x "$(command -v wget)" ] && wget "$INSTALLER_URL" -O - || curl -fsSL "$INSTALLER_URL")"
@@ -29,8 +31,9 @@ if [ -x /msys2.exe ]; then
    ismsys=1
 fi
 
-[ "$DISABLE_OMZ_AUTOUPDATE" = 1 ] &&
+if [ "$DISABLE_OMZ_AUTOUPDATE" = 1 ]; then
    sed -i "/disable automatic updates/ s/^#[ ]*//" ~/.zshrc
+fi
 
 if [ "$USE_RECOMMEND_THEME" = 1 ]; then
    cp $ZSH/themes/steeef.zsh-theme $ZSH_CUSTOM/themes
@@ -38,7 +41,9 @@ if [ "$USE_RECOMMEND_THEME" = 1 ]; then
       -e '/^PROMPT=\$/i local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"' \
       -e "/^PROMPT=\\$'$/{n;s/$/ [%*] \$exit_code/}" \
       $ZSH_CUSTOM/themes/steeef.zsh-theme
-   [ -x "$(command -v lsb_release)" ] && sed -e "/^PROMPT=\\$'$/{n;s/%m/&(\$(lsb_release -si))/}" -i $ZSH_CUSTOM/themes/steeef.zsh-theme
+   if [ -x "$(command -v lsb_release)" ]; then
+      sed -e "/^PROMPT=\\$'$/{n;s/%m/&(\$(lsb_release -si))/}" -i $ZSH_CUSTOM/themes/steeef.zsh-theme
+   fi
    sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="steeef"/' ~/.zshrc
 fi
 
@@ -62,12 +67,14 @@ END
       touch $ZSH_PLUGLOADER_LIST
    fi
 
-   [ "$USE_COMMON_ALIASES" = 1 ] && echo common-aliases >>"$ZSH_PLUGLOADER_LIST"
+   if [ "$USE_COMMON_ALIASES" = 1 ]; then
+      echo common-aliases >>"$ZSH_PLUGLOADER_LIST"
+   fi
 fi
 
 sed -i "s#plugins=(git)\$#source \"$ZSH_PLUGLOADER\"#" ~/.zshrc
-echo "INFO: Plugins loader at: $ZSH_PLUGLOADER"
-echo "INFO: Plugins list at: $ZSH_PLUGLOADER_LIST"
+echo "• Plugins dynamic loader: $ZSH_PLUGLOADER"
+echo "• Plugins static list: $ZSH_PLUGLOADER_LIST"
 echo
 
 if [ "$USE_SYNTAX_HIGHLIGHT" = 1 ]; then
@@ -100,14 +107,22 @@ if [ "$USE_PACMAN_PKGFILE" = 1 ]; then
    echo "==> Run 'sudo pkgfile -u'"
    if [ -x "$(command -v lsb_release)" ]; then
       sudo pkgfile -u
-   elif [ -v ismsys ]; then
+   elif [ -n "$ismsys" ]; then
       pkgfile -u
    fi
 fi
 
-if [ -v ismsys ]; then
+if [ -n "$ismsys" ]; then
    echo "alias sudo=''" | tee -a ~/.zshrc >/dev/null
 fi
 
 echo 'source ~/.zshrc.local' >>~/.zshrc
 touch ~/.zshrc.local
+
+if [ -n "$USE_LOCALIZE" ]; then
+   cat src/snippet-localize.zsh >>~/.zshrc.local
+fi
+
+if [ "$RUNZSH" != no ]; then
+   exec zsh -l
+fi

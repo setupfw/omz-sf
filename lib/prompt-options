@@ -1,82 +1,89 @@
-if [ ! -v DISABLE_OMZ_AUTOUPDATE ]; then
-    printf '
+if [ -z "$DISABLE_OMZ_AUTOUPDATE" ]; then
+   printf '
 Disable ohmyzsh auto update? (Y/n) '
-    read r
+   read r
 
-    if [[ "$r" =~ ^(Y|y|)$ ]]; then
-        DISABLE_OMZ_AUTOUPDATE=1
-        echo 'INFO: manually update command `omz update`'
-    fi
+   case $r in '' | y | Y)
+      DISABLE_OMZ_AUTOUPDATE=1
+      echo 'INFO: manually update command `omz update`'
+      ;;
+   esac
 fi
 
-if [ ! -v USE_PLUGLOADER ]; then
-    printf '
+if [ -z "$USE_PLUGLOADER" ]; then
+   printf '
 Split to-load ohmyzsh plugins into ~/.zshrc.plogloader-list.txt? (Y/n) '
-    read r
+   read r
 
-    if [[ "$r" =~ ^(Y|y|)$ ]]; then
-        USE_PLUGLOADER=1
+   case $r in '' | y | Y)
+      USE_PLUGLOADER=1
 
-        if [ ! -v USE_RECOMMEND_PLUGINS ]; then
-            printf '
+      if [ -z "$USE_RECOMMEND_PLUGINS" ]; then
+         printf '
 Use recommended plugins ? (Y/n) '
-            read r
-            if [[ "$r" =~ ^(Y|y|)$ ]]; then
-                USE_RECOMMEND_PLUGINS=1
+         read r
+         case $r in '' | y | Y)
+            USE_RECOMMEND_PLUGINS=1
 
-                if [ ! -v USE_COMMON_ALIASES ]; then
-                    printf '
+            if [ -z "$USE_COMMON_ALIASES" ]; then
+               printf '
 Document: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/common-aliases
 Recommend to use ohmyzsh common-aliases plugin? (y/N) '
-                    read r
+               read r
 
-                    [[ "$r" =~ ^(Y|y)$ ]] &&
-                        USE_COMMON_ALIASES=1
-                fi
+               case $r in y | Y) USE_COMMON_ALIASES=1 ;; esac
             fi
-        fi
-    fi
-
+            ;;
+         esac
+      fi
+      ;;
+   esac
 fi
 
-if [ ! -v USE_RECOMMEND_THEME ] &&
-    [ "$(grep '^ZSH_THEME=' ~/.zshrc 2>/dev/null | cut -d'"' -f2)" != "steeef" ]; then
-    printf '
-Use ohmyzsh steeef theme? (Y/n) '
-    read r
+if [ ! -f ~/.zshrc.local ] && [ -z "$USE_LOCALIZE" ]; then
+   printf '
+Copy `src/snippet-localize.zsh` to `.zshrc.local`? (Y/n) '
+   read r
+   case $r in '' | y | Y)
+      USE_LOCALIZE=1
+      ;;
+   esac
+fi
 
-    [[ "$r" =~ ^(Y|y|)$ ]] &&
-        USE_RECOMMEND_THEME=1
+if [ -z "$USE_RECOMMEND_THEME" ] &&
+   [ "$(grep '^ZSH_THEME=' ~/.zshrc 2>/dev/null | cut -d'"' -f2)" != "steeef" ]; then
+   printf '
+Use ohmyzsh steeef theme? (Y/n) '
+   read r
+
+   case $r in '' | y | Y) USE_RECOMMEND_THEME=1 ;; esac
 fi
 
 if [ -x "$(command -v lsb_release)" ] && [ ! -z "$(lsb_release -si)" ]; then
-    if [ ! -v USE_SYNTAX_HIGHLIGHT ] &&
-        ! grep -q '^source .*zsh-syntax-highlighting.zsh' ~/.zshrc 2>/dev/null; then
-        printf '
+   if [ -z "$USE_SYNTAX_HIGHLIGHT" ] &&
+      ! grep -q '^source .*zsh-syntax-highlighting.zsh' ~/.zshrc 2>/dev/null; then
+      printf '
 Install zsh-syntax-highlighting? (Y/n) '
-        read r
+      read r
 
-        [[ "$r" =~ ^(Y|y|)$ ]] &&
-            USE_SYNTAX_HIGHLIGHT=1
-    fi
+      case $r in '' | y | Y) USE_SYNTAX_HIGHLIGHT=1 ;; esac
+   fi
 
-    if [ ! -v USE_AUTO_SUGGEST ] &&
-        ! grep -q '^source .*zsh-autosuggestions.zsh' ~/.zshrc 2>/dev/null; then
-        printf '
+   if [ -z "$USE_AUTO_SUGGEST" ] &&
+      ! grep -q '^source .*zsh-autosuggestions.zsh' ~/.zshrc 2>/dev/null; then
+      printf '
 Install zsh-autosuggestions? (Y/n) '
-        read r
+      read r
 
-        [[ "$r" =~ ^(Y|y|)$ ]] &&
-            USE_AUTO_SUGGEST=1
-    fi
+      case $r in '' | y | Y) USE_AUTO_SUGGEST=1 ;; esac
+   fi
 fi
 
-if [ -x "$(command -v pacman)" ] && [ ! -v USE_PACMAN_PKGFILE ] &&
-    [ ! -z "$(pacman -Qs zsh)" ] && ! grep -q '^source /usr/share/doc/pkgfile/command-not-found.zsh$' ~/.zshrc 2>/dev/null; then
-    printf '
+if [ -x "$(command -v pacman)" ] && [ -n "$USE_PACMAN_PKGFILE" ] &&
+   [ ! -z "$(pacman -Qs zsh)" ] && ! grep -q '^source /usr/share/doc/pkgfile/command-not-found.zsh$' ~/.zshrc 2>/dev/null; then
+   printf '
 Install `pkgfile` to provide command-not-found advice? (Y/n) '
-    read r
+   read r
 
-    [[ "$r" =~ ^(Y|y|)$ ]] &&
-        USE_PACMAN_PKGFILE=1
+   case $r in '' | y | Y) USE_PACMAN_PKGFILE=1 ;; esac
 fi
