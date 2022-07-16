@@ -1,0 +1,7 @@
+git gitignore
+sudo history
+extract z dirhistory shell-proxy
+command-not-found
+aliases alias-finder
+# others:
+fd adb shell-proxy

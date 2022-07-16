@@ -1,0 +1,6 @@
+#!/bin/bash
+SCRIPTURL=${SCRIPTURL:-https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh}
+
+sh -c "$(wget -qO- "$SCRIPTURL")"
+
+[[ -v NOLOG ]] || echo "$0" >>~/deployworkenv.log
