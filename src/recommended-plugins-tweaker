@@ -1,0 +1,25 @@
+#!/bin/bash
+
+[ -x "$(command -v systemctl)" ] && echo systemd >>$2
+
+if [ -x "$(command -v dpkg)" ]; then
+    os_id=$( (
+        . /etc/os-release
+        echo $ID
+    ))
+    if [ "$os_id" = ubuntu ]; then
+        echo ubuntu >>$2
+    else
+        echo debian >>$2
+    fi
+    echo "
+unalias acs &>/dev/null
+alias acse='apt-cache search'" >>~/.zshrc
+fi
+
+[ -x "$(command -v dnf)" ] && echo dnf >>$2
+
+[ -x "$(command -v pacman)" ] && echo archlinux >>$2
+
+echo >>$1
+cat src/recommended-plugins-autoloader.zsh >>$1

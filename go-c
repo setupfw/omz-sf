@@ -1,20 +1,15 @@
 #!/bin/bash
-export NOLOG=1
-DIR=$(dirname "$0")
+set -e
+cd $(dirname $0)
 
 echo
-read -p '安装时用 Gitee 镜像仓库取代 GitHub 源 (Y/n)? ' r
+read -p '改用 Gitee 镜像仓库拉取 ohmyzsh 安装 (Y/n)? ' r
 if [[ "$r" =~ ^(Y|y|)$ ]]; then
-    export SCRIPTURL=https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh
-    export REMOTE=https://gitee.com/mirrors/oh-my-zsh.git
+   export INSTALLER_URL=https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh
+   export REMOTE=https://gitee.com/mirrors/oh-my-zsh.git
 fi
 
-RUNZSH=no zsh/setup
+./go
 
-echo
-echo '推荐的 .zshrc 配置：'
-cat "$DIR/_recommend.zsh"
-read -p '是否使用 (Y/n)? ' r
-[[ "$r" =~ ^(Y|y|)$ ]] && cat "$DIR/_recommend.zsh" >>~/.zshrc
-
-echo "$0" >>~/deployworkenv.log
+read -p '写入 src/snippet-c-postfix.zsh 到 .zshrc.local 中 (Y/n)? ' r
+[[ "$r" =~ ^(Y|y|)$ ]] && cat src/snippet-c-postfix.zsh >>~/.zshrc.local

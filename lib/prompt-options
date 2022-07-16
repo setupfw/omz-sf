@@ -1,0 +1,82 @@
+if [ ! -v DISABLE_OMZ_AUTOUPDATE ]; then
+    printf '
+Disable ohmyzsh auto update? (Y/n) '
+    read r
+
+    if [[ "$r" =~ ^(Y|y|)$ ]]; then
+        DISABLE_OMZ_AUTOUPDATE=1
+        echo 'INFO: manually update command `omz update`'
+    fi
+fi
+
+if [ ! -v USE_PLUGLOADER ]; then
+    printf '
+Split to-load ohmyzsh plugins into ~/.zshrc.plogloader-list.txt? (Y/n) '
+    read r
+
+    if [[ "$r" =~ ^(Y|y|)$ ]]; then
+        USE_PLUGLOADER=1
+
+        if [ ! -v USE_RECOMMEND_PLUGINS ]; then
+            printf '
+Use recommended plugins ? (Y/n) '
+            read r
+            if [[ "$r" =~ ^(Y|y|)$ ]]; then
+                USE_RECOMMEND_PLUGINS=1
+
+                if [ ! -v USE_COMMON_ALIASES ]; then
+                    printf '
+Document: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/common-aliases
+Recommend to use ohmyzsh common-aliases plugin? (y/N) '
+                    read r
+
+                    [[ "$r" =~ ^(Y|y)$ ]] &&
+                        USE_COMMON_ALIASES=1
+                fi
+            fi
+        fi
+    fi
+
+fi
+
+if [ ! -v USE_RECOMMEND_THEME ] &&
+    [ "$(grep '^ZSH_THEME=' ~/.zshrc 2>/dev/null | cut -d'"' -f2)" != "steeef" ]; then
+    printf '
+Use ohmyzsh steeef theme? (Y/n) '
+    read r
+
+    [[ "$r" =~ ^(Y|y|)$ ]] &&
+        USE_RECOMMEND_THEME=1
+fi
+
+if [ -x "$(command -v lsb_release)" ] && [ ! -z "$(lsb_release -si)" ]; then
+    if [ ! -v USE_SYNTAX_HIGHLIGHT ] &&
+        ! grep -q '^source .*zsh-syntax-highlighting.zsh' ~/.zshrc 2>/dev/null; then
+        printf '
+Install zsh-syntax-highlighting? (Y/n) '
+        read r
+
+        [[ "$r" =~ ^(Y|y|)$ ]] &&
+            USE_SYNTAX_HIGHLIGHT=1
+    fi
+
+    if [ ! -v USE_AUTO_SUGGEST ] &&
+        ! grep -q '^source .*zsh-autosuggestions.zsh' ~/.zshrc 2>/dev/null; then
+        printf '
+Install zsh-autosuggestions? (Y/n) '
+        read r
+
+        [[ "$r" =~ ^(Y|y|)$ ]] &&
+            USE_AUTO_SUGGEST=1
+    fi
+fi
+
+if [ -x "$(command -v pacman)" ] && [ ! -v USE_PACMAN_PKGFILE ] &&
+    [ ! -z "$(pacman -Qs zsh)" ] && ! grep -q '^source /usr/share/doc/pkgfile/command-not-found.zsh$' ~/.zshrc 2>/dev/null; then
+    printf '
+Install `pkgfile` to provide command-not-found advice? (Y/n) '
+    read r
+
+    [[ "$r" =~ ^(Y|y|)$ ]] &&
+        USE_PACMAN_PKGFILE=1
+fi

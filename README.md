@@ -1,17 +1,19 @@
 # ZSH
 
-`instomz` - install ohmyzsh
+INSTALL: git clone me and cd into, run `./go` 或 `./go-c` (for China)
 
-`setup` extends above and:
+JOBS:
 
-1. copy `_recommend.zsh` to RC
-2. disable ohmyzsh auto update
-3. plugins:
-   1. copy recommend plugins list in `_omzpluglist`
-   2. activate `_omzplugloader.zsh` as `~/.zshrc.plugloader`
-4. install `zsh-syntax-highlighting`
-5. install `zsh-autosuggestions`
-6. recommend a better `steeef` theme
-7. ask for the `common-aliases` plugin
+1. ask for options:
+   - DISABLE_OMZ_AUTOUPDATE
+   - recommend a optimized `steeef` theme
+   - install `zsh-syntax-highlighting`
+   - install `zsh-autosuggestions`
+   - USE_PACMAN_PKGFILE for pacman
+2. recognize your package manager
+3. install zsh within `oh-my-zsh`
+4. copy `src/snippet-after-omz.zsh` to `./zshrc`
+5. tweak `./zshrc`
+6. add plugins loader (and recommend plugins)
 
-... More info in the script content
+NOTICE: `./src/` `~/.zshrc.plugloader-list.txt` is tweakable!

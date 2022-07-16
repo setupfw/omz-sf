@@ -1,11 +1,3 @@
-plugins=()
-while read -r line; do
-    if [[ "$line" != '#'* ]]; then
-        read -A list <<<"$line"
-        plugins+=("${list[@]}")
-    fi
-done <~/.zshrc.pluglist
-
 source ~/.oh-my-zsh/lib/clipboard.zsh
 detect-clipboard && plugins+=(copybuffer copyfile copypath)
 

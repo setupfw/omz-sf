@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "**/lib/*": "shellscript",
+        "**/.zshrc.plugload": "shellscript"
+    }
+}
