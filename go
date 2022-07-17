@@ -79,20 +79,29 @@ echo
 
 if [ "$USE_SYNTAX_HIGHLIGHT" = 1 ]; then
    $INSTPKG zsh-syntax-highlighting
-   if [ -x "$(command -v pacman)" ]; then
-      echo 'source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >>~/.zshrc
-   else
-      echo 'source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >>~/.zshrc
-   fi
+   dirs='/usr/share/zsh/plugins/zsh-syntax-highlighting
+/usr/share/zsh-syntax-highlighting'
+
+   for dir in $dir; do
+      if [ -d "$dir" ]; then
+         echo 'source $dir/zsh-syntax-highlighting.zsh' >>~/.zshrc
+         break
+      fi
+   done
 fi
 
 if [ "$USE_AUTO_SUGGEST" = 1 ]; then
    $INSTPKG zsh-autosuggestions
-   if [ -x "$(command -v pacman)" ]; then
-      echo 'source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh' >>~/.zshrc
-   else
-      echo 'source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh' >>~/.zshrc
-   fi
+   dirs='/usr/share/zsh/plugins/zsh-autosuggestions
+/usr/share/zsh-autosuggestions'
+
+   for dir in $dir; do
+      if [ -d "$dir" ]; then
+         echo 'source $dir/zsh-autosuggestions.zsh' >>~/.zshrc
+         break
+      fi
+   done
+
    cat <<END >>~/.zshrc
 pasteinit(){OLD_SELF_INSERT=\${\${(s.:.)widgets[self-insert]}[2,3]};zle -N self-insert url-quote-magic}
 pastefinish(){zle -N self-insert \$OLD_SELF_INSERT}

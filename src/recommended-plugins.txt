@@ -2,6 +2,6 @@ git gitignore
 sudo history
 extract z dirhistory shell-proxy
 command-not-found
-aliases alias-finder
+aliases alias-finder globalias
 # others:
-fd adb shell-proxy
+fd adb shell-proxy kate
