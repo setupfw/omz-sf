@@ -27,7 +27,7 @@ cat src/recommended-plugins-autoloader.zsh >>$1
 if grep -q globalias in $2; then
     echo >>$1
     echo 'GLOBALIAS_FILTER_VALUES=(' >>$1
-    echo 'do grep hgrep' >>$1
+    echo 'do cp rm mv grep hgrep' >>$1
     for a in $(zsh -i -c 'compgen -a' | grep ^l); do
         case $(zsh -i -c "alias $a" | cut -d\' -f2) in ls*) printf "$a " >>$1 ;; esac
     done

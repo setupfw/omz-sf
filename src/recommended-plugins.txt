@@ -1,7 +1,14 @@
-git gitignore
-sudo history
-extract z dirhistory shell-proxy
-command-not-found
+# Enhance
+sudo history command-not-found zbell
+
+# `cd` Manager
+z jump dirhistory
+
+# Alias
 aliases alias-finder globalias
-# others:
-fd adb shell-proxy kate
+
+# other programs:
+extract git gitignore shell-proxy kate node
+
+# completions:
+fd lxd adb minikube
