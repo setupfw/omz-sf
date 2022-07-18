@@ -24,13 +24,16 @@ fi
 echo >>$1
 cat src/recommended-plugins-autoloader.zsh >>$1
 
-if grep -q globalias in $2; then
-    echo >>$1
-    echo 'GLOBALIAS_FILTER_VALUES=(' >>$1
-    echo 'do cp rm mv grep hgrep' >>$1
+if grep -q globalias $2; then
+    ialist+="do cp rm mv grep hgrep z
+$(echo {1..9})
+"
     for a in $(zsh -i -c 'compgen -a' | grep ^l); do
-        case $(zsh -i -c "alias $a" | cut -d\' -f2) in ls*) printf "$a " >>$1 ;; esac
+        case $(zsh -i -c "alias $a" | cut -d\' -f2) in ls*) ialist+="$a " ;; esac
     done
-    echo >>$1
-    echo ')' >>$1
+    ialist=$(echo $ialist | fold -s)
+    echo "
+GLOBALIAS_FILTER_VALUES=(
+$ialist
+)" >>$1
 fi

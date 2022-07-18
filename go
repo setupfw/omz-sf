@@ -12,7 +12,6 @@ source lib/prompt-options
 source lib/find-pkgmgr
 
 if [ ! -x "$(command -v zsh)" ]; then $INSTPKG zsh; fi
-if [ ! -x "$(command -v git)" ]; then $INSTPKG git; fi
 
 if [ ! -d "$ZSH" ]; then
    if [ ! -x "$(command -v curl)" ] && [ ! -x "$(command -v wget)" ]; then
@@ -49,6 +48,7 @@ fi
 
 if [ "$USE_PLUGLOADER" = 1 ]; then
    cat <<END >$ZSH_PLUGLOADER
+#!/bin/zsh
 plugins=()
 while read -r line; do
     if [[ "\$line" != '#'* ]]; then
