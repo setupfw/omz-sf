@@ -25,13 +25,13 @@ echo >>$1
 cat src/recommended-plugins-autoloader.zsh >>$1
 
 if grep -q globalias $2; then
-    ialist+="
+    ialist="
 cp rm mv grep hgrep z '*'
 $(echo {1..9})
 tmux kate
 "
-    for a in $(zsh -i -c 'compgen -a' | grep ^l); do
-        case $(zsh -i -c "alias $a" | cut -d\' -f2) in ls*) ialist+="$a " ;; esac
+    for a in $(zsh -i -c 'for a in ${(k)aliases[@]}; do echo $a; done' | grep ^l); do
+        case $(zsh -i -c "alias $a" | cut -d\' -f2) in ls*) ialist="$ialist $a " ;; esac
     done
     ialist=$(echo $ialist | fold -s)
     echo "

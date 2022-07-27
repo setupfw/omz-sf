@@ -8,7 +8,7 @@ z jump dirhistory
 aliases alias-finder globalias
 
 # other programs:
-extract git gitignore shell-proxy kate node
+extract git gitignore shell-proxy
 
 # completions:
 fd lxd adb minikube

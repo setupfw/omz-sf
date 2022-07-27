@@ -1,7 +1,7 @@
 source ~/.oh-my-zsh/lib/clipboard.zsh
 detect-clipboard && plugins+=(copybuffer copyfile copypath)
 
-for it in rsync tmux docker yarn rustc; do
+for it in rsync tmux docker rustc kate node yarn; do
     [ -n "$(whence "$it")" ] && plugins+=("$it")
 done
 
