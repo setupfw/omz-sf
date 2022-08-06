@@ -17,8 +17,6 @@ if [ -n "$1" ]; then apply_gitee; fi
 
 RUNZSH=no source ./go
 
-if [ -n "$USE_LOCALIZE" ]; then
-   cat src/snippet-localize-c.zsh >>~/.zshrc.local
-fi
+# todo ...
 
 exec zsh -l
