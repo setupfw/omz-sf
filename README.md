@@ -1,8 +1,12 @@
 # ZSH
 
-INSTALL: git clone me and cd into, run `./go` 或 `./go-c` (for China)
+## Setup
 
-JOBS:
+git clone me and cd into, run `./go`
+
+( `./go-c` from [gitee.com mirror](https://gitee.com/mirrors/oh-my-zsh) )
+
+## What Todo
 
 1. ask for options:
    - DISABLE_OMZ_AUTOUPDATE
@@ -16,4 +20,6 @@ JOBS:
 5. tweak `./zshrc`
 6. add plugins loader (and recommend plugins)
 
-NOTICE: `./src/` `~/.zshrc.plugloader-list.txt` is tweakable!
+## Notice
+
+`./src/` `~/.zshrc.plugloader-list.txt` is tweakable!
