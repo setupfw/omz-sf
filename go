@@ -70,6 +70,10 @@ END
    if [ "$USE_COMMON_ALIASES" = 1 ]; then
       echo common-aliases >>"$ZSH_PLUGLOADER_LIST"
    fi
+
+   if [ "$USE_GLOBALIAS" = 1 ]; then
+      echo globalias >>"$ZSH_PLUGLOADER_LIST"
+   fi
 fi
 
 sed -i "s#plugins=(git)\$#source \"$ZSH_PLUGLOADER\"#" ~/.zshrc

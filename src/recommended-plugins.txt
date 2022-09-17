@@ -1,14 +1,16 @@
-# Enhance
+# Enhance:
 sudo history command-not-found zbell
 
-# `cd` Manager
+# `cd` Manager:
 z jump dirhistory
 
-# Alias
-aliases alias-finder globalias
+# Alias:
+aliases alias-finder
 
-# other programs:
+# Other Programs:
 extract git gitignore shell-proxy
 
-# completions:
+# Completion:
 fd lxd adb minikube
+
+# More:

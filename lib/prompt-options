@@ -1,8 +1,7 @@
 if [ -z "$DISABLE_OMZ_AUTOUPDATE" ]; then
-   printf '
-Disable ohmyzsh auto update? (Y/n) '
+   echo
+   printf 'Disable ohmyzsh auto update? (Y/n) '
    read r
-
    case $r in '' | y | Y)
       DISABLE_OMZ_AUTOUPDATE=1
       echo 'INFO: manually update command `omz update`'
@@ -11,27 +10,30 @@ Disable ohmyzsh auto update? (Y/n) '
 fi
 
 if [ -z "$USE_PLUGLOADER" ]; then
-   printf '
-Split to-load ohmyzsh plugins into ~/.zshrc.plogloader-list.txt? (Y/n) '
+   echo
+   printf 'Split to-load ohmyzsh plugins into ~/.zshrc.plogloader-list.txt? (Y/n) '
    read r
-
    case $r in '' | y | Y)
       USE_PLUGLOADER=1
-
       if [ -z "$USE_RECOMMEND_PLUGINS" ]; then
-         printf '
-Use recommended plugins ? (Y/n) '
+         echo
+         printf 'Use recommended plugins ? (Y/n) '
          read r
          case $r in '' | y | Y)
             USE_RECOMMEND_PLUGINS=1
-
             if [ -z "$USE_COMMON_ALIASES" ]; then
-               printf '
-Document: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/common-aliases
-Recommend to use ohmyzsh common-aliases plugin? (y/N) '
+               echo
+               echo 'SEE: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/common-aliases'
+               printf 'Recommend to use ohmyzsh common-aliases plugin? (y/N) '
                read r
-
                case $r in y | Y) USE_COMMON_ALIASES=1 ;; esac
+            fi
+            if [ -z "$USE_GLOBALIAS" ]; then
+               echo
+               echo 'SEE: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/globalias'
+               printf 'Use GLOBALIAS to auto expand alias to full command (`ctrl + space` to suspend)? (y/N) '
+               read r
+               case $r in y | Y) USE_GLOBALIAS=1 ;; esac
             fi
             ;;
          esac
@@ -41,49 +43,42 @@ Recommend to use ohmyzsh common-aliases plugin? (y/N) '
 fi
 
 if [ ! -f ~/.zshrc.local ] && [ -z "$USE_LOCALIZE" ]; then
-   printf '
-Copy `src/snippet-localize.zsh` to `.zshrc.local`? (Y/n) '
+   echo
+   printf 'Copy `src/snippet-localize.zsh` to `.zshrc.local`? (Y/n) '
    read r
-   case $r in '' | y | Y)
-      USE_LOCALIZE=1
-      ;;
-   esac
+   case $r in '' | y | Y) USE_LOCALIZE=1 ;; esac
 fi
 
 if [ -z "$USE_RECOMMEND_THEME" ] &&
    [ "$(grep '^ZSH_THEME=' ~/.zshrc 2>/dev/null | cut -d'"' -f2)" != "steeef" ]; then
-   printf '
-Use ohmyzsh steeef theme? (Y/n) '
+   echo
+   printf 'Use ohmyzsh steeef theme? (Y/n) '
    read r
-
    case $r in '' | y | Y) USE_RECOMMEND_THEME=1 ;; esac
 fi
 
 if [ -x "$(command -v lsb_release)" ] && [ ! -z "$(lsb_release -si)" ]; then
    if [ -z "$USE_SYNTAX_HIGHLIGHT" ] &&
       ! grep -q '^source .*zsh-syntax-highlighting.zsh' ~/.zshrc 2>/dev/null; then
-      printf '
-Install zsh-syntax-highlighting? (Y/n) '
+      echo
+      printf 'Install zsh-syntax-highlighting? (Y/n) '
       read r
-
       case $r in '' | y | Y) USE_SYNTAX_HIGHLIGHT=1 ;; esac
    fi
 
    if [ -z "$USE_AUTO_SUGGEST" ] &&
       ! grep -q '^source .*zsh-autosuggestions.zsh' ~/.zshrc 2>/dev/null; then
-      printf '
-Install zsh-autosuggestions? (Y/n) '
+      echo
+      printf 'Install zsh-autosuggestions? (Y/n) '
       read r
-
       case $r in '' | y | Y) USE_AUTO_SUGGEST=1 ;; esac
    fi
 fi
 
 if [ -x "$(command -v pacman)" ] && [ -n "$USE_PACMAN_PKGFILE" ] &&
    [ ! -z "$(pacman -Qs zsh)" ] && ! grep -q '^source /usr/share/doc/pkgfile/command-not-found.zsh$' ~/.zshrc 2>/dev/null; then
-   printf '
-Install `pkgfile` to provide command-not-found advice? (Y/n) '
+   echo
+   printf 'Install `pkgfile` to provide command-not-found advice? (Y/n) '
    read r
-
    case $r in '' | y | Y) USE_PACMAN_PKGFILE=1 ;; esac
 fi
