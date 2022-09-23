@@ -62,17 +62,16 @@ END
       [ ! -f "$ZSH_PLUGLOADER_LIST" ] &&
          cat src/recommended-plugins.txt >$ZSH_PLUGLOADER_LIST
 
+      if [ "$USE_COMMON_ALIASES" = 1 ]; then
+         echo common-aliases >>"$ZSH_PLUGLOADER_LIST"
+      fi
+      if [ "$USE_GLOBALIAS" = 1 ]; then
+         echo globalias >>"$ZSH_PLUGLOADER_LIST"
+      fi
+
       src/recommended-plugins-tweaker $ZSH_PLUGLOADER $ZSH_PLUGLOADER_LIST
    else
       touch $ZSH_PLUGLOADER_LIST
-   fi
-
-   if [ "$USE_COMMON_ALIASES" = 1 ]; then
-      echo common-aliases >>"$ZSH_PLUGLOADER_LIST"
-   fi
-
-   if [ "$USE_GLOBALIAS" = 1 ]; then
-      echo globalias >>"$ZSH_PLUGLOADER_LIST"
    fi
 fi
 
