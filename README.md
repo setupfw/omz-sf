@@ -1,12 +1,10 @@
-# ZSH
-
-## Setup
+# [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh) Setup Framework
 
 1. Git clone this repository and `cd` into it
-2. Edit `./config` or `cp samples/* .`, and `./snippets`
+2. Edit `./config` or `cp samples/* .` and `./snippets`
 3. Run `./setup`
 
-## What Todo
+## Auto Tasks
 
 1. ask for options:
    - disable auto update
