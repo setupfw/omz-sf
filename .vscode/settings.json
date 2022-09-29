@@ -1,6 +1,10 @@
 {
     "files.associations": {
-        "**/lib/*": "shellscript",
-        "**/.zshrc.plugload": "shellscript"
+        "**/setup": "shellscript",
+        "**/config*": "shellscript",
+        "**/samples/config-*": "shellscript",
+        "**/scripts/*": "shellscript",
+        "**/snippets/*": "shellscript",
+        "**/snippets/.zshrc.plug.list": "plaintext"
     }
 }

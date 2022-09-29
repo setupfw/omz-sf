@@ -1,0 +1,2 @@
+export INSTALLER_URL=https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh
+export REMOTE=https://gitee.com/mirrors/oh-my-zsh.git

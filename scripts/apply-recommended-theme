@@ -1,0 +1,25 @@
+cd $ZSH_CUSTOM/themes
+
+sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="steeef"/' ~/.zshrc
+
+if [ -f steeef.zsh-theme ]; then
+    exit
+fi
+
+cp $ZSH/themes/steeef.zsh-theme .
+
+if [ -x "$(command -v lsb_release)" ]; then
+    osname=$(lsb_release -si)
+elif grep -qF 'ID=alpine' /etc/os-release; then
+    osname=Alpine
+fi
+if [ -n "$osname" ]; then
+    sed -e "/^PROMPT=\\$'$/{n;s/\$vcs_info_msg/[$osname] &/}" -i steeef.zsh-theme
+fi
+
+sed -i \
+    -e '/^PROMPT=\$/i local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"' \
+    -e "/^PROMPT=\\$'$/{n;s/ at /@/;s/ in /:/;s#\$(virtualenv_info)#\$(type virtualenv_info>/dev/null\&\&virtualenv_info)#;s/$/ [%*] \$exit_code/}" \
+    steeef.zsh-theme
+
+cd - >/dev/null

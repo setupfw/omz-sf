@@ -1,0 +1,108 @@
+#!/bin/sh
+set -e
+cd $(dirname $0)
+
+. config
+for useConfigFile in config-*; do
+   . $useConfigFile
+done
+
+. scripts/check-config
+
+printf 'Confirm to setup? (Y/n) '
+read r
+case $r in
+'' | y | Y) ;;
+*) exit ;;
+esac
+
+echo '==> Begin to setup'
+
+source scripts/install-requirements
+
+if [ ! -d "$ZSH" ]; then
+   INSTALLER_URL=${INSTALLER_URL:-https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh}
+   if [ -x "$(command -v wget)" ]; then
+      installer_code=$(wget "$INSTALLER_URL" -qO-)
+   else
+      installer_code=$(curl -fsSL "$INSTALLER_URL")
+   fi
+   RUNZSH=no sh -c "$installer_code"
+fi
+
+if [ "$DISABLE_AUTOUPDATE" = 1 ]; then
+   sed -i "/disable automatic updates/ s/^#[ ]*//" ~/.zshrc
+fi
+
+if [ "$APPLY_RECOMMENDED_THEME" = 1 ]; then
+   scripts/apply-recommended-theme
+fi
+
+if [ "$APPLY_ZSHRC_PLUGINS_LOADER" = 1 ]; then
+   scripts/apply-zshrc-plugins-loader
+fi
+
+ensureLineInZshrc() {
+   if [ -z "$1" ]; then
+      echo >>~/.zshrc
+   elif ! grep -qF "$1" ~/.zshrc; then
+      echo "$1" >>~/.zshrc
+   fi
+}
+
+ensureLineInZshrc
+
+if [ "$INSTALL_SYNTAXHIGHLIGHT" = 1 ]; then
+   set -- \
+      '/usr/share/zsh/plugins/zsh-syntax-highlighting' \
+      '/usr/share/zsh-syntax-highlighting'
+   for dir; do
+      if [ -d $dir ]; then
+         ensureLineInZshrc "source $dir/zsh-syntax-highlighting.zsh"
+         break
+      fi
+   done
+fi
+
+if [ "$INSTALL_AUTOSUGGESTIONS" = 1 ]; then
+   set -- \
+      '/usr/share/zsh/plugins/zsh-autosuggestions' \
+      '/usr/share/zsh-autosuggestions'
+   for dir; do
+      if [ -d $dir ]; then
+         ensureLineInZshrc "source $dir/zsh-autosuggestions.zsh"
+         break
+      fi
+   done
+
+   ensureLineInZshrc
+   ensureLineInZshrc 'pasteinit(){OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]};zle -N self-insert url-quote-magic}'
+   ensureLineInZshrc 'pastefinish(){zle -N self-insert $OLD_SELF_INSERT}'
+   ensureLineInZshrc 'zstyle :bracketed-paste-magic paste-init pasteinit'
+   ensureLineInZshrc 'zstyle :bracketed-paste-magic paste-finish pastefinish'
+fi
+
+if [ -x "$(command -v pacman)" ]; then
+   if [ "$INSTALL_PACMAN_PKGFILE" = 1 ]; then
+      ensureLineInZshrc 'source /usr/share/doc/pkgfile/command-not-found.zsh'
+   fi
+fi
+
+zshrcSnippetComment='# setup-omz recommend:'
+if ! grep -qF "$zshrcSnippetComment" ~/.zshrc; then
+   echo >>~/.zshrc
+   echo "$zshrcSnippetComment" >>~/.zshrc
+   cat snippets/.zshrc >>~/.zshrc
+   echo >>~/.zshrc
+fi
+
+if [ "$USE_ZSHRC_LOCAL" = 1 ]; then
+   ensureLineInZshrc 'source ~/.zshrc.local'
+   cp -n snippets/.zshrc.local ~/.zshrc.local
+fi
+
+awk '/^$/{n=n RS}; /./{printf "%s",n; n=""; print}' ~/.zshrc >~/.zshrc-trimed
+rm ~/.zshrc
+mv ~/.zshrc-trimed ~/.zshrc
+
+echo '==> Finish'
