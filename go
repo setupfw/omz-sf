@@ -35,15 +35,18 @@ if [ "$DISABLE_OMZ_AUTOUPDATE" = 1 ]; then
 fi
 
 if [ "$USE_RECOMMEND_THEME" = 1 ]; then
-   cp $ZSH/themes/steeef.zsh-theme $ZSH_CUSTOM/themes
+   cd $ZSH_CUSTOM/themes
+   cp $ZSH/themes/steeef.zsh-theme .
    sed -i \
       -e '/^PROMPT=\$/i local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"' \
+      -e "/^PROMPT=\\$'$/{n;s#\$(virtualenv_info)#\$(type virtualenv_info>/dev/null\&\&virtualenv_info)#}" \
       -e "/^PROMPT=\\$'$/{n;s/$/ [%*] \$exit_code/}" \
-      $ZSH_CUSTOM/themes/steeef.zsh-theme
+      steeef.zsh-theme
    if [ -x "$(command -v lsb_release)" ]; then
-      sed -e "/^PROMPT=\\$'$/{n;s/%m/&(\$(lsb_release -si))/}" -i $ZSH_CUSTOM/themes/steeef.zsh-theme
+      sed -e "/^PROMPT=\\$'$/{n;s/%m/&(\$(lsb_release -si))/}" -i steeef.zsh-theme
    fi
    sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="steeef"/' ~/.zshrc
+   cd - >/dev/null
 fi
 
 if [ "$USE_PLUGLOADER" = 1 ]; then
