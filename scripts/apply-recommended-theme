@@ -14,7 +14,7 @@ elif grep -qF 'ID=alpine' /etc/os-release; then
     osname=Alpine
 fi
 if [ -n "$osname" ]; then
-    sed -e "/^PROMPT=\\$'$/{n;s/\$vcs_info_msg/[$osname] &/}" -i steeef.zsh-theme
+    sed -e "/^PROMPT=\\$'$/{n;s/\$vcs_info_msg/<$osname>&/}" -i steeef.zsh-theme
 fi
 
 sed -i \

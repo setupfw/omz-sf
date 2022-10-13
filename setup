@@ -2,12 +2,13 @@
 set -e
 cd $(dirname $0)
 
+. scripts/config-define
 . config
-for useConfigFile in config-*; do
-   . $useConfigFile
+for cfg in $(find . -maxdepth 1 -name 'config-*'); do
+   . $cfg
 done
 
-. scripts/check-config
+. scripts/config-check
 
 printf 'Confirm to setup? (Y/n) '
 read r
