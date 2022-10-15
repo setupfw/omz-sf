@@ -2,13 +2,13 @@
 set -e
 cd $(dirname $0)
 
-. scripts/config-define
+. lib/config-define
 . config
 for cfg in $(find . -maxdepth 1 -name 'config-*'); do
    . $cfg
 done
 
-. scripts/config-check
+. lib/config-check
 
 printf 'Confirm to setup? (Y/n) '
 read r
@@ -19,7 +19,7 @@ esac
 
 echo '==> Begin to setup'
 
-source scripts/install-requirements
+source lib/install-requirements
 
 if [ ! -d "$ZSH" ]; then
    INSTALLER_URL=${INSTALLER_URL:-https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh}
@@ -36,11 +36,11 @@ if [ "$DISABLE_AUTOUPDATE" = 1 ]; then
 fi
 
 if [ "$APPLY_RECOMMENDED_THEME" = 1 ]; then
-   scripts/apply-recommended-theme
+   lib/apply-recommended-theme
 fi
 
 if [ "$APPLY_ZSHRC_PLUGINS_LOADER" = 1 ]; then
-   scripts/apply-zshrc-plugins-loader
+   lib/apply-zshrc-plugins-loader
 fi
 
 ensureLineInZshrc() {

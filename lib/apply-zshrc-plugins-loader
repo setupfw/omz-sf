@@ -10,7 +10,7 @@ done <$ZSH_PLUGLOADER_LIST
 END
 
 if [ "$ADD_RECOMMENDED_PLUGINS" = 1 ]; then
-   scripts/add-recommended-plugins
+   lib/add-recommended-plugins
 else
    touch $ZSH_PLUGLOADER_LIST
 fi

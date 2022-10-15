@@ -3,7 +3,7 @@
         "**/setup": "shellscript",
         "**/config*": "shellscript",
         "**/samples/config-*": "shellscript",
-        "**/scripts/*": "shellscript",
+        "**/lib/*": "shellscript",
         "**/snippets/*": "shellscript",
         "**/snippets/.zshrc.plug.list": "plaintext"
     }
