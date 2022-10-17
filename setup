@@ -3,7 +3,7 @@ set -e
 cd $(dirname $0)
 
 . lib/config-define
-. config
+. ./config
 for cfg in $(find . -maxdepth 1 -name 'config-*'); do
    . $cfg
 done
