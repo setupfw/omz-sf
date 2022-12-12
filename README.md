@@ -1,8 +1,11 @@
 # [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh) Setup Framework
 
-1. Git clone this repository and `cd` into it
-2. Check `./samples/*` and edit `./configuration`
-3. Run `./setup`
+1.  Execute:
+
+        git clone https://github.com/setupfw/omz-sf ~/omz-sf && cd $_
+
+2.  Check `./samples/*` and edit `./configuration`
+3.  Run `./setup`
 
 ## Auto Tasks
 
@@ -17,3 +20,7 @@
 4. copy template
 5. tweak `./zshrc`
 6. add plugins loader (and recommend plugins)
+
+## Warning
+
+⚠️ DISCLAIMER: Check the intention of all scripts carefully and backup your important data before setup, I am not responsible for any data loss that may occur.
