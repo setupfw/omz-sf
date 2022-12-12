@@ -1,5 +1,5 @@
 #!/bin/sh
 cd $(dirname $0)/..
-for samplefile in samples/sample-*; do
+for samplefile in $(find samples -maxdepth 1 -name 'sample-*'); do
     cp $samplefile $(basename $samplefile)
 done
