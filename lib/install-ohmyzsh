@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+
+cd $(dirname $0)/..
+source lib/config-load
+
+if [ ! -d "$ZSH" ]; then
+   if [ -x "$(command -v wget)" ]; then
+      installer_code=$(wget "$INSTALLER_URL" -qO-)
+   else
+      installer_code=$(curl -fsSL "$INSTALLER_URL")
+   fi
+   RUNZSH=no ZSH=$ZSH REMOTE=$REMOTE sh -c "$installer_code"
+else
+   cd $ZSH
+   git fetch
+   git reset --hard master
+fi

@@ -1,3 +1,9 @@
+#!/bin/sh
+set -e
+
+cd $(dirname $0)/..
+source lib/config-load
+
 if [ -z "$addpkgcmd" ]; then
     if [ -x "$(command -v pacman)" ]; then
         addpkgcmd='pacman -S --noconfirm'
@@ -46,16 +52,16 @@ if [ ! -x "$(command -v wget)" ] && [ ! -x "$(command -v curl)" ]; then
     $addpkgcmd wget
 fi
 
-if [ "$INSTALL_SYNTAXHIGHLIGHT" = 1 ]; then
+if [ "$SUDO_ADD_SYNTAXHIGHLIGHT" = 1 ]; then
     $addpkgcmd zsh-syntax-highlighting
 fi
 
-if [ "$INSTALL_AUTOSUGGESTIONS" = 1 ]; then
+if [ "$SUDO_ADD_AUTOSUGGESTIONS" = 1 ]; then
     $addpkgcmd zsh-autosuggestions
 fi
 
 if [ -x "$(command -v pacman)" ]; then
-    if [ "$INSTALL_PACMAN_PKGFILE" = 1 ]; then
+    if [ "$SUDO_ADD_PKGFILE" = 1 ]; then
         $addpkgcmd pkgfile
 
         echo "INFO: run 'pkgfile -u'"

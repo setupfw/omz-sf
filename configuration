@@ -1,0 +1,20 @@
+# Reference to `./samples/sample-*`, and then run `./lib/config-check` to confirm.
+
+# INSTALL:
+# - zsh-autosuggestions
+# - zsh-syntax-highlighting
+# - pkgfile (for pacman only)
+SUDO_ADD_AUTOSUGGESTIONS=1
+SUDO_ADD_SYNTAXHIGHLIGHT=1
+SUDO_ADD_PKGFILE=1
+
+DISABLE_AUTOUPDATE=1
+
+APPLY_RECOMMENDED_THEME=1
+
+# Split your `.zshrc` code into `~/.zshrc.local`:
+APPLY_ZSHRC_LOCAL=1
+
+# Extract plugins array from `.zshrc` into `.zshrc.plug.list` and `.zshrc.plug.loader`, add recommended plugins:
+APPLY_ZSHRC_PLUGINS_LOADER=1
+APPLY_RECOMMENDED_PLUGINS=1

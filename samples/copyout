@@ -1,0 +1,5 @@
+#!/bin/sh
+cd $(dirname $0)/..
+for samplefile in samples/sample-*; do
+    cp $samplefile $(basename $samplefile)
+done

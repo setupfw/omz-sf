@@ -1,0 +1,115 @@
+#!/bin/sh
+set -e
+
+cd $(dirname $0)/..
+source lib/config-load
+source lib/api
+
+if ! [ -d "$ZSH_CUSTOM" ]; then
+   echo 'Error: ohmyzsh is not installed.'
+   exit 2
+fi
+
+(
+   cd $ZSH_CUSTOM/themes
+
+   if [ "$APPLY_RECOMMENDED_THEME" != 1 ]; then exit; fi
+
+   sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="steeef"/' ~/.zshrc
+
+   if [ -f steeef.zsh-theme ]; then
+      exit
+   fi
+
+   cp $ZSH/themes/steeef.zsh-theme .
+
+   if [ -x "$(command -v lsb_release)" ]; then
+      osname=$(lsb_release -si)
+   elif grep -qF 'ID=alpine' /etc/os-release; then
+      osname=Alpine
+   fi
+   if [ -n "$osname" ]; then
+      sed -e "/^PROMPT=\\$'$/{n;s/\$vcs_info_msg/<$osname>&/}" -i steeef.zsh-theme
+   fi
+
+   sed -i \
+      -e '/^PROMPT=\$/i local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"' \
+      -e "/^PROMPT=\\$'$/{n;s/ at /@/;s/ in /:/;s#\$(virtualenv_info)#\$(type virtualenv_info>/dev/null\&\&virtualenv_info)#;s/$/ [%*] \$exit_code/}" \
+      steeef.zsh-theme
+)
+
+(
+   if [ "$APPLY_ZSHRC_PLUGINS_LOADER" != 1 ]; then exit; fi
+
+   path_to_loader=$PATH_TO_PLUGLOADER_SCRIPT
+   path_to_list=$PATH_TO_PLUGLOADER_LIST
+
+   cat <<END >$path_to_loader
+#!/bin/zsh
+plugins=()
+while read -r line; do
+    if [[ "\$line" != '#'* ]]; then
+        read -A list <<<"\$line"
+        plugins+=("\${list[@]}")
+    fi
+done <$path_to_list
+END
+
+   if [ "$APPLY_RECOMMENDED_PLUGINS" != 1 ]; then
+      touch $path_to_list
+   else
+      if [ ! -f "$path_to_list" ]; then
+         cat template/.zshrc.plug.list >$path_to_list
+      fi
+
+      if [ "$APPLY_RECOMMENDED_PLUGINS_ENHANCED_ALIASES" = 1 ]; then
+         appendLineIfNotExist $path_to_list 'common-aliases globalias'
+      fi
+
+      [ -x "$(command -v systemctl)" ] && echo systemd >>$path_to_list
+
+      if [ -x "$(command -v dpkg)" ]; then
+         osType=$(grep ^ID= /etc/os-release | cut -d= -f2)
+         if [ "$osType" = ubuntu ]; then
+            appendLineIfNotExist $path_to_list ubuntu
+         else
+            appendLineIfNotExist $path_to_list debian
+         fi
+
+         appendLineIfNotExist ~/.zshrc
+         appendLineIfNotExist ~/.zshrc 'unalias acs &>/dev/null'
+         appendLineIfNotExist ~/.zshrc "alias acse='apt-cache search'"
+      fi
+
+      [ -x "$(command -v dnf)" ] && appendLineIfNotExist $path_to_list dnf
+
+      [ -x "$(command -v pacman)" ] && appendLineIfNotExist $path_to_list archlinux
+
+      echo >>$path_to_loader
+      cat template/.zshrc.plug.loader >>$path_to_loader
+
+      ignore_list="
+cp rm mv grep hgrep z '*'
+$(echo {1..9})
+tmux kate
+"
+
+      if grep -q globalias $path_to_list; then
+
+         for a in $(zsh -ic alias | grep "='ls " | cut -d= -f1); do
+            ignore_list="$ignore_list$a "
+         done
+
+         echo >>$path_to_loader
+         printf "GLOBALIAS_FILTER_VALUES=($(echo $ignore_list | fold -s)\n)\n" >>$path_to_loader
+      fi
+   fi
+
+   sed -i "s#plugins=(git)\$#source \"$path_to_loader\"#" ~/.zshrc
+
+   cat <<END
+• Plugins dynamic loader: $path_to_loader
+• Plugins static list: $path_to_list
+
+END
+)

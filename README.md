@@ -1,7 +1,7 @@
 # [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh) Setup Framework
 
 1. Git clone this repository and `cd` into it
-2. Edit `./config` or `cp samples/* .` and `./snippets`
+2. Check `./samples/*` and edit `./configuration`
 3. Run `./setup`
 
 ## Auto Tasks
@@ -14,6 +14,6 @@
    - install `pkgfile` for pacman
 2. recognize your package manager
 3. install zsh within `oh-my-zsh`
-4. copy snippets
+4. copy template
 5. tweak `./zshrc`
 6. add plugins loader (and recommend plugins)

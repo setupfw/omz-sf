@@ -1,5 +1,0 @@
-#!/bin/sh
-samplesdir=samples
-for samplefile in $samplesdir/config-*; do
-    ln -fs $samplefile $(basename $samplefile)
-done

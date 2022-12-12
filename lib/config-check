@@ -1,29 +1,59 @@
-echo '==> Checking Config'
-echo 'Edit `./config*` files before setup. Reference: `./samples/*`'
-echo
+#!/bin/sh
+set -e
 
-echo ZSH=$ZSH
-if [ -n "$INSTALLER_URL" ]; then echo INSTALLER_URL=$INSTALLER_URL; fi
-if [ -n "$REMOTE" ]; then echo REMOTE=$REMOTE; fi
-echo DISABLE_AUTOUPDATE=$DISABLE_AUTOUPDATE
-echo APPLY_RECOMMENDED_THEME=$APPLY_RECOMMENDED_THEME
-echo USE_ZSHRC_LOCAL=$USE_ZSHRC_LOCAL
+cd $(dirname $0)/..
+source ./lib/config-load
 
-echo APPLY_ZSHRC_PLUGINS_LOADER=$APPLY_ZSHRC_PLUGINS_LOADER
+docfile=$(mktemp)
+cat <<END >$docfile
+== Check Config ==
+
+Press j, k, d, u to scroll up down.
+Press q to continue.
+
+Edit "./config*" before setup. Reference: "./samples/*"
+
+==================
+
+SUDO ADD PACKAGE:
+
+Auto Suggestions          = $SUDO_ADD_AUTOSUGGESTIONS
+Syntax Highlight          = $SUDO_ADD_SYNTAXHIGHLIGHT
+(For pacman only) pkgfile = $SUDO_ADD_PKGFILE
+
+INSTALL:
+
+Target Path    = $ZSH
+Script URL     = $INSTALLER_URL
+Repository URL = $REMOTE
+
+TWEAK:
+
+Disable auto update = $DISABLE_AUTOUPDATE
+
+CUSTOM:
+
+Apply recommended theme             = $APPLY_RECOMMENDED_THEME
+Apply ./template/.zshrc.plug.loader = $APPLY_ZSHRC_PLUGINS_LOADER
+Write your code in ~/.zshrc.local   = $APPLY_ZSHRC_LOCAL
+END
+
 if [ "$APPLY_ZSHRC_PLUGINS_LOADER" = 1 ]; then
-    echo ZSH_PLUGLOADER=$ZSH_PLUGLOADER
-    echo ZSH_PLUGLOADER_LIST=$ZSH_PLUGLOADER_LIST
-    echo ADD_RECOMMENDED_PLUGINS=$ADD_RECOMMENDED_PLUGINS
-    if [ "$ADD_RECOMMENDED_PLUGINS" = 1 ]; then
-        echo ADD_ENHANCED_ALIASES_PLUGINS=$ADD_ENHANCED_ALIASES_PLUGINS
-    fi
+   cat <<END >>$docfile
+
+PLUGINS LOADER:
+
+Path to loader                = $PATH_TO_PLUGLOADER_SCRIPT
+Path to required plugins list = $PATH_TO_PLUGLOADER_LIST
+Add recommended plugins       = $APPLY_RECOMMENDED_PLUGINS
+END
+   if [ "$APPLY_RECOMMENDED_PLUGINS" = 1 ]; then
+      cat <<END >>$docfile
+
+Add recommended plugins (enhanced aliases) = $APPLY_RECOMMENDED_PLUGINS_ENHANCED_ALIASES
+END
+   fi
 fi
 
-echo INSTALL_SYNTAXHIGHLIGHT=$INSTALL_SYNTAXHIGHLIGHT
-echo INSTALL_AUTOSUGGESTIONS=$INSTALL_AUTOSUGGESTIONS
-
-if [ -x "$(command -v pacman)" ]; then
-    echo INSTALL_PACMAN_PKGFILE=$INSTALL_PACMAN_PKGFILE
-fi
-
-echo
+cat $docfile | less -IS
+rm $docfile

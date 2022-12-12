@@ -1,0 +1,50 @@
+#!/bin/sh
+set -e
+
+cd $(dirname $0)/..
+source lib/config-load
+source lib/api
+
+if [ "$DISABLE_AUTOUPDATE" = 1 ]; then
+   sed -i "/disable automatic updates/ s/^#[ ]*//" ~/.zshrc
+fi
+
+if [ "$SUDO_ADD_SYNTAXHIGHLIGHT" = 1 ]; then
+   set -- \
+      '/usr/share/zsh/plugins/zsh-syntax-highlighting' \
+      '/usr/share/zsh-syntax-highlighting'
+   for dir; do
+      if [ -d $dir ]; then
+         appendLineIfNotExist ~/.zshrc
+         appendLineIfNotExist ~/.zshrc "source $dir/zsh-syntax-highlighting.zsh"
+         break
+      fi
+   done
+fi
+
+if [ "$SUDO_ADD_AUTOSUGGESTIONS" = 1 ]; then
+   set -- \
+      '/usr/share/zsh/plugins/zsh-autosuggestions' \
+      '/usr/share/zsh-autosuggestions'
+   for dir; do
+      if [ -d $dir ]; then
+         appendLineIfNotExist ~/.zshrc
+         appendLineIfNotExist ~/.zshrc "source $dir/zsh-autosuggestions.zsh"
+         break
+      fi
+   done
+
+   appendLineIfNotExist ~/.zshrc 'pasteinit(){OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]};zle -N self-insert url-quote-magic}'
+   appendLineIfNotExist ~/.zshrc 'pastefinish(){zle -N self-insert $OLD_SELF_INSERT}'
+   appendLineIfNotExist ~/.zshrc 'zstyle :bracketed-paste-magic paste-init pasteinit'
+   appendLineIfNotExist ~/.zshrc 'zstyle :bracketed-paste-magic paste-finish pastefinish'
+fi
+
+if [ -x "$(command -v pacman)" ]; then
+   if [ "$SUDO_ADD_PKGFILE" = 1 ]; then
+      appendLineIfNotExist ~/.zshrc
+      appendLineIfNotExist ~/.zshrc 'source /usr/share/doc/pkgfile/command-not-found.zsh'
+   fi
+fi
+
+trimFinalNewlines ~/.zshrc
