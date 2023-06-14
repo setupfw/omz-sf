@@ -6,8 +6,10 @@ for it in rsync tmux docker rustc kate node yarn pip fzf; do
     [ -n "$(whence "$it")" ] && plugins+=("$it") || :
 done
 
-[ -n "$(whence fzf)" ] && plugins+=(zsh-interactive-cd) || :
+[ -x "$(whence fzf)" ] && plugins+=(zsh-interactive-cd) || :
 
-[ -n "$(whence go)" ] && plugins+=(golang) || :
+[ -x "$(whence go)" ] && plugins+=(golang) || :
 
 [ -x "$(whence pip3)" ] && plugins+=(pip) || :
+
+[ -x "$(whence rustc)" ] && plugins+=(rust) || :
