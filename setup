@@ -21,17 +21,17 @@ source lib/api
 
 zshrcSnippetComment='# setup-omz prefer:'
 if ! grep -qF "$zshrcSnippetComment" ~/.zshrc; then
-   echo >>~/.zshrc
-   echo "$zshrcSnippetComment" >>~/.zshrc
-   cat template/.zshrc >>~/.zshrc
+	echo >>~/.zshrc
+	echo "$zshrcSnippetComment" >>~/.zshrc
+	cat template/.zshrc >>~/.zshrc
 fi
 
 if [ "$APPLY_ZSHRC_LOCAL" = 1 ]; then
-   sed -i '/^source ~\/.zshrc.local$/d' ~/.zshrc
-   trimFinalNewlines ~/.zshrc
-   echo >>~/.zshrc
-   echo 'source ~/.zshrc.local' >>~/.zshrc
-   cp -n template/.zshrc.local ~/.zshrc.local
+	sed -i '/^source ~\/.zshrc.local$/d' ~/.zshrc
+	trimFinalNewlines ~/.zshrc
+	echo >>~/.zshrc
+	echo 'source ~/.zshrc.local' >>~/.zshrc
+	cp -n template/.zshrc.local ~/.zshrc.local
 fi
 
 trimFinalNewlines ~/.zshrc
