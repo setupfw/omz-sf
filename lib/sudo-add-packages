@@ -5,71 +5,75 @@ cd $(dirname $0)/..
 source lib/config-load
 
 if [ -z "$addpkgcmd" ]; then
-    if [ -x "$(command -v pacman)" ]; then
-        addpkgcmd='pacman -S --noconfirm'
-    elif [ -x "$(command -v dpkg)" ]; then
-        addpkgcmd='apt-get install -y'
-    elif [ -x "$(command -v dnf)" ]; then
-        addpkgcmd='dnf install -y'
-    elif [ -x "$(command -v apk)" ]; then
-        addpkgcmd='apk add'
-    elif [ -x "$(command -v pkcon)" ] && [ -d /run/systemd/system ]; then
-        addpkgcmd='pkcon install -y'
-    fi
-    case $addpkgcmd in pkcon*) ;; *)
-        if [ $(id -u) != 0 ] && [ -x "$(command -v sudo)" ]; then
-            addpkgcmd="sudo $addpkgcmd"
-        fi
-        ;;
-    esac
+   if [ -x "$(command -v pacman)" ]; then
+      addpkgcmd='pacman -S --noconfirm'
+   elif [ -x "$(command -v dpkg)" ]; then
+      addpkgcmd='apt-get install -y'
+   elif [ -x "$(command -v dnf)" ]; then
+      addpkgcmd='dnf install -y'
+   elif [ -x "$(command -v apk)" ]; then
+      addpkgcmd='apk add'
+   elif [ -x "$(command -v pkcon)" ] && [ -d /run/systemd/system ]; then
+      addpkgcmd='pkcon install -y'
+   elif [ -x "$(command -v brew)" ]; then
+      addpkgcmd='brew install'
+   fi
+   if [ -x "$(command -v sudo)" ] && [ $(id -u) != 0 ]; then
+      case $addpkgcmd in
+      '' | pkcon* | brew*) ;;
+      *)
+         addpkgcmd="sudo $addpkgcmd"
+         ;;
+      esac
+   fi
 fi
 
 if [ -n "$addpkgcmd" ]; then
-    echo "INFO: package installer = $addpkgcmd"
+   echo "INFO: package installer = $addpkgcmd"
 else
-    echo
-    echo "What's your package manager? such as:"
-    echo '- `sudo pacman -S --noconfirm`'
-    echo '- `sudo apt-get install -y`'
-    echo '- `sudo dnf install -y`'
-    echo '- `sudo apk add`'
-    echo '- ...'
-    read -p 'Input the install command:' addpkgcmd
+   echo
+   echo "What's your package manager? such as:"
+   echo '- `sudo pacman -S --noconfirm`'
+   echo '- `sudo apt-get install -y`'
+   echo '- `sudo dnf install -y`'
+   echo '- `sudo apk add`'
+   echo '- ...'
+   read -p 'Input the install command:' addpkgcmd
 fi
 
 if [ ! -x "$(command -v git)" ]; then
-    $addpkgcmd git
+   $addpkgcmd git
 fi
 
 if [ ! -x "$(command -v zsh)" ]; then
-    $addpkgcmd zsh
+   $addpkgcmd zsh
 fi
 
 if [ -x "$(command -v apk)" ]; then
-    $addpkgcmd zsh-vcs
+   $addpkgcmd zsh-vcs
 fi
 
 if [ ! -x "$(command -v wget)" ] && [ ! -x "$(command -v curl)" ]; then
-    $addpkgcmd wget
+   $addpkgcmd wget
 fi
 
 if [ "$SUDO_ADD_SYNTAXHIGHLIGHT" = 1 ]; then
-    $addpkgcmd zsh-syntax-highlighting
+   $addpkgcmd zsh-syntax-highlighting
 fi
 
 if [ "$SUDO_ADD_AUTOSUGGESTIONS" = 1 ]; then
-    $addpkgcmd zsh-autosuggestions
+   $addpkgcmd zsh-autosuggestions
 fi
 
 if [ -x "$(command -v pacman)" ]; then
-    if [ "$SUDO_ADD_PKGFILE" = 1 ]; then
-        $addpkgcmd pkgfile
+   if [ "$SUDO_ADD_PKGFILE" = 1 ]; then
+      $addpkgcmd pkgfile
 
-        echo "INFO: run 'pkgfile -u'"
-        if [ -x "$(command -v sudo)" ]; then
-            sudo pkgfile -u
-        elif [ -n "$isMsys2" ]; then
-            pkgfile -u
-        fi
-    fi
+      echo "INFO: run 'pkgfile -u'"
+      if [ -x "$(command -v sudo)" ]; then
+         sudo pkgfile -u
+      elif [ -n "$isMsys2" ]; then
+         pkgfile -u
+      fi
+   fi
 fi

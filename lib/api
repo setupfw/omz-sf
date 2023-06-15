@@ -13,3 +13,7 @@ trimFinalNewlines() {
    rm $1
    mv $tmp $1
 }
+
+if [[ "$OSTYPE" == darwin* ]]; then
+  alias sed=gsed
+fi

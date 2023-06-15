@@ -25,8 +25,11 @@ fi
 
    if [ -x "$(command -v lsb_release)" ]; then
       osname=$(lsb_release -si)
+   elif [[ "$OSTYPE" == darwin* ]]; then
+      osname=MacOS
    elif grep -qF 'ID=alpine' /etc/os-release; then
       osname=Alpine
+      touch ~/.hushlogin
    fi
    if [ -n "$osname" ]; then
       sed -e "/^PROMPT=\\$'$/{n;s/\$vcs_info_msg/<$osname>&/}" -i steeef.zsh-theme
