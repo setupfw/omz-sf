@@ -17,7 +17,7 @@ lib/zshrc-tweak
 lib/zshrc-custom
 
 source lib/config-load
-source lib/api
+source lib/api.bash
 
 zshrcSnippetComment='# setup-omz prefer:'
 if ! grep -qF "$zshrcSnippetComment" ~/.zshrc; then

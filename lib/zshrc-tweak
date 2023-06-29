@@ -3,7 +3,7 @@ set -e
 
 cd $(dirname $0)/..
 source lib/config-load
-source lib/api
+source lib/api.bash
 
 if [ "$DISABLE_AUTOUPDATE" = 1 ]; then
    sed -i "/disable automatic updates/ s/^#[ ]*//" ~/.zshrc

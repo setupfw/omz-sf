@@ -3,7 +3,7 @@ set -e
 
 cd $(dirname $0)/..
 source lib/config-load
-source lib/api
+source lib/api.bash
 
 if ! [ -d "$ZSH_CUSTOM" ]; then
    echo 'Error: ohmyzsh is not installed.'

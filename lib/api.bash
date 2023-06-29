@@ -15,5 +15,6 @@ trimFinalNewlines() {
 }
 
 if [[ "$OSTYPE" == darwin* ]]; then
-  alias sed=gsed
+   [ ! -x "$(command -v gsed)" ] && brew install gsed || :
+   alias sed=gsed
 fi
